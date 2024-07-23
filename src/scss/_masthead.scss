@@ -1,0 +1,143 @@
+// Styling for the masthead
+header.masthead {
+  height: 100vh;
+  min-height: 750px;
+  background: url("../img/background/pbg.jpg");
+  background-attachment: fixed;
+  text-emphasis: ellipsis;
+  @include background-cover;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    font-weight: 400;
+    line-height: 120%;
+  }
+
+  h1.lg-heading,
+  h2.lg-heading,
+  h3.lg-heading {
+    color: white;
+  }
+
+  h1.sm-heading,
+  h2.sm-heading,
+  h3.sm-heading {
+    //margin-bottom: 2rem;
+    padding: 0.2rem 1rem;
+    //background: rgba(73, 73, 73, 0.5);
+  }
+
+  #home {
+    text-align: center;
+    overflow: hidden;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 4rem;
+    min-height: calc(100vh - 60px);
+
+    .lg-heading {
+      color: white;
+
+      span.lg-heading-secondary {
+        color: $primary;
+      }
+    }
+
+    .sm-heading {
+      color: white;
+    }
+
+    :after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: rgba(68, 68, 68, 0.01);
+    }
+  }
+
+  img.profile {
+    margin-top: 8vh;
+    margin-bottom: 5vh;
+    height: auto;
+    max-width: 100%;
+    border-radius: 50%;
+    border: 6px solid rgba(23, 15, 52, 0.25);
+  }
+
+  .icons {
+    margin-top: 1rem;
+    a {
+      padding: 0.4rem;
+    }
+  }
+
+  @include mobile {
+    img.profile {
+      width: 200px;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+    .icons {
+      font-size: 0.8rem;
+    }
+  }
+
+  @include mediaSm {
+    min-height: 600px;
+    img.profile {
+      width: 300px;
+    }
+    h1 {
+      font-size: 2.5rem;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  @include mediaMd {
+    img.profile {
+      width: 350px;
+    }
+    h1 {
+      font-size: 2.5rem;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  @include mediaLg {
+    h1 {
+      font-size: 3rem;
+    }
+    h2 {
+      font-size: 2.5rem;
+    }
+  }
+
+  @include mediaXl {
+    min-height: 750px;
+    h1 {
+      font-size: 3rem;
+    }
+    h2 {
+      font-size: 2.5rem;
+    }
+  }
+}

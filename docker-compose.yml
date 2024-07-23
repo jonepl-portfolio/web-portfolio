@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web-portfolio:
+    image: jonepl/web-portfolio:latest
+    expose:
+      - "80"
+    networks:
+      - portfolio-network
+
+networks:
+  portfolio-network:
+    external: true
