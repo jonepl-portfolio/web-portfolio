@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web-portfolio:
-    image: jonepl/web-portfolio:latest
+    image: ${DOCKER_USERNAME}/web-portfolio:latest
     ports:
       - "80:80"
     volumes:

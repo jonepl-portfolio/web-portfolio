@@ -11,12 +11,15 @@ This web portfolio runs an Nginx web server to host the static files within a do
 
 ## Usage
 
-- `npm run build` builds the project - this builds assets, HTML, JS, and CSS into `dist`
-- `npm run serve:dev` runs the project, launches a live preview in your default browser, and watches for changes made to files in `src`
-- `npm run serve:dist` runs the project, launches a live preview in your default browser, and watches for changes made to files in `dist`
+### Running Locally
+1. `npm run build` builds the project - this builds assets, HTML, JS, and CSS into `dist`
+2. `npm run serve:dist` runs the project, launches a live preview in your default browser, and watches for changes made to files in `dist`
 
-# Deployment
-- Ensure you have the latest dist folder build before creating an image
+### Running with Docker
+1. `make build-image` build docker image.
+2. `make run-container` runs the docker container using the docker-compose.override.yml.
+3. `make destroy-container` tears down the docker container.
+
 
 ## Bugs and Issues
 

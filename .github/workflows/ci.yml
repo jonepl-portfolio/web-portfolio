@@ -10,9 +10,24 @@ on:
       - main
 
 jobs:
+  check-version-incremented:
+    name: Verify Application Version Incremented
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verify Version
+        run: |
+          current_version=$(cat VERSION)
+          previous_version=$(docker image ls --filter "reference=***/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
+          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+
   validate-docker-compose:
     name: Validate Docker Compose Files
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
