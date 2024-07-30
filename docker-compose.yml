@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web-portfolio:
     container_name: web-portfolio
-    image: ${DOCKER_USERNAME}/web-portfolio:latest
+    image: jonepl/web-portfolio:latest
     expose:
       - "80"
     networks:
