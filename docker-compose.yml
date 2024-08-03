@@ -8,6 +8,17 @@ services:
       - "80"
     networks:
       - portfolio-network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
 
 networks:
   portfolio-network:
