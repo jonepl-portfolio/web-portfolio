@@ -141,4 +141,4 @@ jobs:
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/srv/app/web-portfolio/docker-compose.yml
 
       - name: Update Docker Swarm service
-        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} 'docker service update --image jonepl/web-portfolio:latest hosted-apps_web-portfolio'
+        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} 'docker stack deploy -c /srv/app/web-portfolio/docker-compose.yml hosted-apps'
