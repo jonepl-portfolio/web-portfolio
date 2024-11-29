@@ -13,7 +13,6 @@ jobs:
   check-application-versions:
     name: Verify Application Versions are Incremented
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,10 +29,20 @@ jobs:
           previous_version=$(docker image ls --filter "reference=***/mail-server" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
 
+  tests:
+    name: Test Mail Server
+    runs-on: ubuntu-latest
+    needs: validate-docker-compose
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Test
+        run: npm --prefix mail-server/ run test
+
   validate-docker-compose:
     name: Validate Docker Compose Files
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -44,20 +53,15 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Validate Docker Compose file
+      - name: Validate Applicaiton Docker Compose file
         run: docker-compose -f docker-compose.yml config
 
-  test-mail-server:
-    name: Test Mail Server
-    runs-on: ubuntu-latest
-    needs: validate-docker-compose
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Validate Mock Server Docker Compose file
+        run: docker-compose -f docker-compose.server.yml config
 
-      - name: Run Test
-        run: npm --prefix mail-server/ run test
+      - name: Validate Mock Server Application Docker Compose file
+        run: docker-compose -f docker-compose.server.yml config
+
 
   build-docker-image:
     name: Build Docker Image
