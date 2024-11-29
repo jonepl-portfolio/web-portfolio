@@ -1,26 +1,58 @@
 # My Web Portfolio
 
+This repository contains the Web Portfolio for the hosted applications. The Web Portfolio is written in Vite within a NodeJS mail server. These services are designed to be integrated within a Docker Swarm instance to serve my personal web portfolio.
+
+* [Design](#design)
+* [Prerequisites](#prerequisites)
+* [Usage](#usage)
+* [Pre-Merge Checklist](#pre-merge-checklist)
+
 ## Design
 <p align="center">
- <img src="./docs/Web-Portfolio.png" style="display: block; margin: 0 auto">
+ <img src="./docs/Web-Portfolio.jpg" style="display: block; margin: 0 auto">
 </p>
 
 <br/>
 
 This web portfolio runs an Nginx web server to host the static files within a docker container. The docker-compose file is meant to be used within a docker-swarm instance.
 
+## Prerequisites
+* NodeJS
+* NGINX
+
 ## Usage
 
-### Running Locally
-1. `npm run build` builds the project - this builds assets, HTML, JS, and CSS into `dist`
-2. `npm run serve:dist` runs the project, launches a live preview in your default browser, and watches for changes made to files in `dist`
+This web portfolio uses a NodeJS mail server which you must configured to send emails. 
 
-### Running with Docker
-1. `make build-image` build docker image.
-2. `make run-container` runs the docker container using the docker-compose.override.yml.
-3. `make destroy-container` tears down the docker container.
+* Read name `.env.local.config.example` to `.env.local.config` and update PORT value if needed
+* Read name  `.env.local.secret.example` to `.env.local.secret` and provide the
 
+  ```
+  # Email server
+  SERVICE="yahoo"
+  
+  # Sender's email address
+  EMAIL_USER="example@yahoo.com"
 
-## Bugs and Issues
+  # Email Application Password
+  EMAIL_PASS="mypassword"
 
-See [Bugs and Issues](bugs-&-issues.md)
+  # Recipient's email address
+  FORWARD_EMAIL_USER="myemail@yahoo.com"
+  ```
+
+### Running Dev Locally
+1. Open a terminal shell and run `make start-server-dev`
+2. Open a second terminal and run  `start-portfolio-dev`
+3. Access web portfolio via `http://localhost:4000`
+
+### Running Docker Swarm Locally
+1. Build the mock server with `make build-mock-server`
+2. Start mock server with `make start-mock-server`
+3. Access web portfolio via `http://localhost`
+
+NOTE: The above steps will simulate a remote server. An entrypoint.sh script will initialize Docker Swarm, create networks, secrets, configs, build images and start the web portfolio services. The application should be accessible via port 80.
+
+## Pre-Merge Checklist
+* Update [Portfolio VERSION](./portfolio/VERSION) or [Mail Server VERSION](./mail-server/VERSION)
+* Update [Porfolio CHANGELOG.md](./portfolio/CHANGELOG.md) or [Mail Server CHANGELOG.md](./mail-server/CHANGELOG.md)

@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  server:
+    container_name: mock-server
+    image: mock-server:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2375:2375"
+    privileged: true
+    environment:
+      - DOCKER_API_VERSION=1.41 

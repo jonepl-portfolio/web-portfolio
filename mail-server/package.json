@@ -1,0 +1,27 @@
+{
+  "name": "mail-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "NODE_ENV=production node server.js",
+    "test": "jest",
+    "test:debug": "node --inspect-brk node_modules/jest/bin/jest.js --runInBand"
+  },
+  "author": "Purnell Jones",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-mock": "^29.7.0",
+    "nodemailer-mock": "^2.0.6",
+    "supertest": "^7.0.0"
+  }
+}
