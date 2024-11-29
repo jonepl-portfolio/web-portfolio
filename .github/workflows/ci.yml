@@ -10,18 +10,24 @@ on:
       - main
 
 jobs:
-  check-version-incremented:
-    name: Verify Application Version Incremented
+  check-application-versions:
+    name: Verify Application Versions are Incremented
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verify Version
+      - name: Verify Portfolio Version
         run: |
-          current_version=$(cat VERSION)
+          current_version=$(cat ./portfolio/VERSION)
           previous_version=$(docker image ls --filter "reference=***/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
+          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+
+      - name: Verify Mail Server Version
+        run: |
+          current_version=$(cat ./mail-server/VERSION)
+          previous_version=$(docker image ls --filter "reference=***/mail-server" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
 
   validate-docker-compose:
