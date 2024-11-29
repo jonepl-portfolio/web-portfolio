@@ -37,6 +37,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm --prefix mail-server/ install
+
       - name: Run Test
         run: npm --prefix mail-server/ run test
 
