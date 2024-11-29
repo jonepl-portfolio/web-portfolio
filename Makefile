@@ -1,24 +1,21 @@
-ifndef DOCKER_USERNAME
-  ifneq (,$(wildcard .env))
-    include .env
-    export $(shell sed 's/=.*//' .env)
-  endif
+start-server-dev:
+	npm --prefix mail-server/ run dev
 
-  ifndef DOCKER_USERNAME
-    $(error DOCKER_USERNAME is not set. Please set it in the environment or in the .env file)
-  endif
-endif
+start-portfolio-dev:
+	npm --prefix portfolio/ run dev
 
-build-image:
-	docker build -t $(DOCKER_USERNAME)/web-portfolio:latest .
-	docker image prune -f
+build-mock-server:
+	docker build -f Dockerfile.local -t mock-server:latest .
 
-run-container:
-	docker-compose up -d
+start-mock-server:
+	docker-compose -f docker-compose.server.yml up -d
+	# Wait for dockerd to be ready
+	until docker exec mock-server docker info > /dev/null 2>&1; do \
+		echo "Waiting for Docker daemon in mock-server to be ready..."; \
+		sleep 2; \
+	done
+	# Run the entrypoint script
+	docker exec mock-server /srv/app/entrypoint.sh
 
-start-container: run-container
-
-stop-container:
-	docker-compose down
-
-destroy-container: stop-container
+stop-mock-server:
+	docker-compose -f docker-compose.server.yml down

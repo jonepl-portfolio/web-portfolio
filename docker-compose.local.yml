@@ -1,9 +1,11 @@
 version: '3.8'
+
 services:
   web-portfolio:
+    container_name: web-portfolio
     image: web-portfolio:latest
-    expose:
-      - "80"
+    ports:
+      - "80:80"
     depends_on:
       - mail-server
     networks:
@@ -40,14 +42,14 @@ services:
       restart_policy:
         condition: on-failure
 
+networks:
+  portfolio-network:
+    external: true
+
 secrets:
   mail_server_secret:
     external: true
 
 configs:
   mail_server_config:
-    external: true
-
-networks:
-  portfolio-network:
     external: true
