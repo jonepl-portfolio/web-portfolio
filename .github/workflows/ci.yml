@@ -91,12 +91,21 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          current_version=$(cat VERSION)
+          portfolio_version=$(cat ./portfolio/VERSION)
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $current_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$current_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest .
-          docker save --output portfolio-versioned.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$current_version
+          if [[ $portfolio_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+          
+          docker build -f ./portfolio/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest .
+          docker save --output portfolio-versioned.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
           docker save --output portfolio-latest.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
+
+          mail_server_version=$(cat ./mail-server/VERSION)
+          previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
+          if [[ $mail_server_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+
+          docker build -f ./mail-server/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version -t ${{ secrets.DOCKER_USERNAME }}/mail-server:latest .
+          docker save --output mail-server-versioned.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version
+          docker save --output mail-server-latest.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -108,6 +117,8 @@ jobs:
           path: |
             portfolio-versioned.docker
             portfolio-latest.docker
+            mail-server-versioned.docker
+            mail-server-latest.docker
 
   push-docker-image:
     name: Push Docker Image
@@ -136,9 +147,17 @@ jobs:
         run: |
           docker load --input ./portfolio-versioned.docker
           docker load --input ./portfolio-latest.docker
-          current_version=$(cat VERSION)
+
+          docker load --input ./mail-server-versioned.docker
+          docker load --input ./mail-server-latest.docker
+
+          portfolio_version=$(cat ./portfolio/VERSION) 
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$current_version
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
+          
+          mail_server_verison=$(cat ./mail-server/VERSION)
+          docker push ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_verison
+          docker push ${{ secrets.DOCKER_USERNAME }}/mail-server:latest
 
   deploy-docker-compose:
     name: Deploy Docker Compose
