@@ -29,25 +29,6 @@ jobs:
           previous_version=$(docker image ls --filter "reference=***/mail-server" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
 
-  tests:
-    name: Test Mail Server
-    runs-on: ubuntu-latest
-    needs: validate-docker-compose
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - name: Install dependencies
-        run: npm --prefix mail-server/ install
-
-      - name: Run Test
-        run: npm --prefix mail-server/ run test
-
   validate-docker-compose:
     name: Validate Docker Compose Files
     runs-on: ubuntu-latest
@@ -70,12 +51,31 @@ jobs:
       - name: Validate Mock Server Application Docker Compose file
         run: docker-compose -f docker-compose.server.yml config
 
+  tests:
+    name: Test Mail Server
+    runs-on: ubuntu-latest
+    needs: validate-docker-compose
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm --prefix mail-server/ install
+
+      - name: Run Test
+        run: npm --prefix mail-server/ run test
+
 
   build-docker-image:
     name: Build Docker Image
     runs-on: ubuntu-latest
     needs: validate-docker-compose
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $portfolio_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
           
-          docker build -f ./portfolio/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest .
+          docker build -f ./portfolio/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest ./portfolio
           docker save --output portfolio-versioned.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
           docker save --output portfolio-latest.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
 
@@ -103,7 +103,7 @@ jobs:
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $mail_server_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
 
-          docker build -f ./mail-server/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version -t ${{ secrets.DOCKER_USERNAME }}/mail-server:latest .
+          docker build -f ./mail-server/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version -t ${{ secrets.DOCKER_USERNAME }}/mail-server:latest ./mail-server
           docker save --output mail-server-versioned.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version
           docker save --output mail-server-latest.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:latest
         env:
