@@ -11,7 +11,7 @@ on:
 
 jobs:
   check-application-versions:
-    name: Verify Application Versions are Incremented
+    name: Verify Application Versions
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,6 +28,29 @@ jobs:
           current_version=$(cat ./mail-server/VERSION)
           previous_version=$(docker image ls --filter "reference=***/mail-server" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+
+  validate-docker-compose:
+    name: Validate Docker Compose Files
+    runs-on: ubuntu-latest
+    needs: check-application-versions
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose version
+
+      - name: Validate Applicaiton Docker Compose file
+        run: docker-compose -f docker-compose.yml config
+
+      - name: Validate Mock Server Docker Compose file
+        run: docker-compose -f docker-compose.server.yml config
+
+      - name: Validate Mock Server Application Docker Compose file
+        run: docker-compose -f docker-compose.server.yml config
 
   tests:
     name: Test Mail Server
@@ -48,33 +71,10 @@ jobs:
       - name: Run Test
         run: npm --prefix mail-server/ run test
 
-  validate-docker-compose:
-    name: Validate Docker Compose Files
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose version
-
-      - name: Validate Applicaiton Docker Compose file
-        run: docker-compose -f docker-compose.yml config
-
-      - name: Validate Mock Server Docker Compose file
-        run: docker-compose -f docker-compose.server.yml config
-
-      - name: Validate Mock Server Application Docker Compose file
-        run: docker-compose -f docker-compose.server.yml config
-
-
   build-docker-image:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    needs: validate-docker-compose
+    needs: tests
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
@@ -95,7 +95,7 @@ jobs:
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $portfolio_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
           
-          docker build -f ./portfolio/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest .
+          docker build -f ./portfolio/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest ./portfolio
           docker save --output portfolio-versioned.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
           docker save --output portfolio-latest.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
 
@@ -103,7 +103,7 @@ jobs:
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $mail_server_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
 
-          docker build -f ./mail-server/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version -t ${{ secrets.DOCKER_USERNAME }}/mail-server:latest .
+          docker build -f ./mail-server/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version -t ${{ secrets.DOCKER_USERNAME }}/mail-server:latest ./mail-server
           docker save --output mail-server-versioned.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version
           docker save --output mail-server-latest.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:latest
         env:
