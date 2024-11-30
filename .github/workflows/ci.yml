@@ -19,13 +19,13 @@ jobs:
 
       - name: Verify Portfolio Version
         run: |
-          current_version=$(cat ./portfolio/VERSION)
+          current_version=$(cat ./portfolio/VERSION | tr -d '\n\r')
           previous_version=$(docker image ls --filter "reference=***/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
 
       - name: Verify Mail Server Version
         run: |
-          current_version=$(cat ./mail-server/VERSION)
+          current_version=$(cat ./mail-server/VERSION | tr -d '\n\r')
           previous_version=$(docker image ls --filter "reference=***/mail-server" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
 
@@ -91,7 +91,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          portfolio_version=$(cat ./portfolio/VERSION)
+          portfolio_version=$(cat ./portfolio/VERSION | tr -d '\n\r')
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
           if [[ $portfolio_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
           
@@ -151,30 +151,11 @@ jobs:
           docker load --input ./mail-server-versioned.docker
           docker load --input ./mail-server-latest.docker
 
-          # Extract and trim versions
           portfolio_version=$(cat ./portfolio/VERSION | tr -d '\n\r')
-          mail_server_version=$(cat ./mail-server/VERSION | tr -d '\n\r')
-
-          # Debugging output
-          echo "Portfolio version: $portfolio_version"
-          echo "Mail server version: $mail_server_version"
-
-          # Validate that versions are not empty
-          if [[ -z "$portfolio_version" ]]; then
-            echo "Error: Portfolio version is empty."
-            exit 1
-          fi
-
-          if [[ -z "$mail_server_version" ]]; then
-            echo "Error: Mail server version is empty."
-            exit 1
-          fi
-
-          portfolio_version=$(cat ./portfolio/VERSION) 
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
           
-          mail_server_version=$(cat ./mail-server/VERSION)
+          mail_server_version=$(cat ./mail-server/VERSION | tr -d '\n\r')
           docker push ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version
           docker push ${{ secrets.DOCKER_USERNAME }}/mail-server:latest
 
