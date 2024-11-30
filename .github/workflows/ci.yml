@@ -151,6 +151,25 @@ jobs:
           docker load --input ./mail-server-versioned.docker
           docker load --input ./mail-server-latest.docker
 
+          # Extract and trim versions
+          portfolio_version=$(cat ./portfolio/VERSION | tr -d '\n\r')
+          mail_server_version=$(cat ./mail-server/VERSION | tr -d '\n\r')
+
+          # Debugging output
+          echo "Portfolio version: $portfolio_version"
+          echo "Mail server version: $mail_server_version"
+
+          # Validate that versions are not empty
+          if [[ -z "$portfolio_version" ]]; then
+            echo "Error: Portfolio version is empty."
+            exit 1
+          fi
+
+          if [[ -z "$mail_server_version" ]]; then
+            echo "Error: Mail server version is empty."
+            exit 1
+          fi
+
           portfolio_version=$(cat ./portfolio/VERSION) 
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$current_version
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
