@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.2
+* Update fetch endpoint.
+
 ## 2.0.1
 * Update NGINX configuration for mail server.
 
