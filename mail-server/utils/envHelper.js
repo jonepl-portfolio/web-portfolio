@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { exit } = require('process');
 
-const REQUIRED_ENV_VARS = ['SERVICE', 'EMAIL_USER', 'EMAIL_PASS', 'FORWARD_EMAIL_USER'];
+const REQUIRED_SECRETS = ['SERVICE', 'EMAIL_USER', 'EMAIL_PASS', 'FORWARD_EMAIL_USER'];
 const SECRETS_PATH = '/run/secrets/mail_server_secret';
 const CONFIG_PATH = '/run/config/mail_server_config';
 
@@ -10,7 +9,7 @@ const CONFIG_PATH = '/run/config/mail_server_config';
 function loadEnv() {
   loadEnvFromFile(SECRETS_PATH);
   loadEnvFromFile(CONFIG_PATH);
-  process.env["NODE_ENV"] = process.env.NODE_ENV || 'production';
+  loadEnvDefaults();
 };
 
 function loadEnvFromFile(filePath) {
@@ -39,7 +38,7 @@ function loadEnvFromFile(filePath) {
       });
 
       // Check for missing required environment variables
-      const missingVars = REQUIRED_ENV_VARS.filter((varName) => !process.env[varName]);
+      const missingVars = REQUIRED_SECRETS.filter((varName) => !process.env[varName]);
       if (missingVars.length > 0) {
         console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
         throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
@@ -53,6 +52,24 @@ function loadEnvFromFile(filePath) {
     console.error(`Error reading file ${filePath}:`, error);
     throw error;
   }
+}
+
+function loadEnvDefaults() {
+  if (process.env.NODE_ENV === undefined) {
+    console.info("NODE_ENV is undefined, defaulting to 'production'");
+  }
+
+  if (process.env.EMAIL_PORT === undefined) {
+    console.info("EMAIL_PORT is undefined, defaulting to 3000");
+  }
+
+  if (process.env.EMAIL_HOST === undefined) {
+    console.info("EMAIL_HOST is undefined, defaulting to 'localhost'");
+  }
+
+  process.env["NODE_ENV"] = process.env.NODE_ENV || 'production';
+  process.env["EMAIL_PORT"] = process.env.EMAIL_PORT || 3000;
+  process.env["EMAIL_HOST"] = process.env.EMAIL_HOST || "localhost";
 }
 
 module.exports = loadEnv;

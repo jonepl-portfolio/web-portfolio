@@ -45,7 +45,7 @@ create_network() {
 create_secret() {
     if ! docker secret ls | grep -q "mail_server_secret"; then
         log_message "INFO" "Creating Docker secret 'mail_server_secret'..."
-        docker secret create mail_server_secret $MAIL_SERVER_DIR/.env.local.secret
+        docker secret create mail_server_secret $MAIL_SERVER_DIR/.env.secret
     else
         log_message "INFO" "Docker secret 'mail_server_secret' already exists."
     fi
@@ -54,7 +54,7 @@ create_secret() {
 create_config() {
     if ! docker config ls | grep -q "mail_server_config"; then
         log_message "INFO" "Creating Docker config 'mail_server_config'..."
-        docker config create mail_server_config $MAIL_SERVER_DIR/.env.local.config
+        docker config create mail_server_config $MAIL_SERVER_DIR/.env.config
     else
         log_message "INFO" "Docker config 'mail_server_config' already exists."
     fi

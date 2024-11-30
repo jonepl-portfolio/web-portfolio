@@ -91,6 +91,12 @@
   }
 }
 
+@media (width <= 800px) {
+  .description {
+    max-width: 34ch;
+  }
+}
+
 @media (width >= 1400px) {
   .container {
     .hero {
