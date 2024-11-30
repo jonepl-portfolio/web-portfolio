@@ -1,5 +1,8 @@
 # Change Log
 
+# 1.0.3
+* Increase logging for config
+
 # 1.0.2
 * Fix default localhost in mail server. Fix text alignment in UI
 

@@ -55,17 +55,17 @@ function loadEnvFromFile(filePath) {
 }
 
 function loadEnvDefaults() {
-  if (process.env.NODE_ENV === undefined) {
+  process.env.NODE_ENV ? 
+    console.info(`NODE_ENV is set to ${process.env.NODE_ENV}`) : 
     console.info("NODE_ENV is undefined, defaulting to 'production'");
-  }
 
-  if (process.env.EMAIL_PORT === undefined) {
+  process.env.EMAIL_PORT ? 
+    console.info(`EMAIL_PORT is set to ${process.env.EMAIL_PORT}`) : 
     console.info("EMAIL_PORT is undefined, defaulting to 3000");
-  }
 
-  if (process.env.EMAIL_HOST === undefined) {
+  process.env.EMAIL_HOST ? 
+    console.info(`EMAIL_HOST is set to ${process.env.EMAIL_HOST}`) : 
     console.info("EMAIL_HOST is undefined, defaulting to 'localhost'");
-  }
 
   process.env["NODE_ENV"] = process.env.NODE_ENV || 'production';
   process.env["EMAIL_PORT"] = process.env.EMAIL_PORT || 3000;

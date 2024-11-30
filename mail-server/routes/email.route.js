@@ -13,6 +13,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+console.log(process.env.EMAIL_HOST);
+console.log(process.env.EMAIL_PORT);
+console.log(process.env.SERVICE);
+console.log(process.env.EMAIL_USER);
+console.log(process.env.EMAIL_PASS);
+
 // POST /send-email route
 router.post('/', (req, res) => {
   console.log("POST request received with body:", req.body);
@@ -23,6 +29,12 @@ router.post('/', (req, res) => {
     subject: `Web Portfolio message from ${name}`,
     text: message + ". \n\nEmail: " + email,
   };
+
+  console.log(process.env.EMAIL_HOST);
+  console.log(process.env.EMAIL_PORT);
+  console.log(process.env.SERVICE);
+  console.log(process.env.EMAIL_USER);
+  console.log(process.env.EMAIL_PASS);
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
