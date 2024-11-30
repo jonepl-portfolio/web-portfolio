@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   web-portfolio:
-    image: web-portfolio:latest
+    image: jonepl/web-portfolio:latest
     expose:
       - "80"
     depends_on:
@@ -21,7 +21,7 @@ services:
         condition: on-failure
 
   mail-server:
-    image: mail-server:latest
+    image: jonepl/mail-server:latest
     secrets:
       - mail_server_secret
     configs:
