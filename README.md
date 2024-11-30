@@ -24,8 +24,8 @@ This web portfolio runs an Nginx web server to host the static files within a do
 
 This web portfolio uses a NodeJS mail server which you must configured to send emails. 
 
-* Read name `.env.local.config.example` to `.env.local.config` and update PORT value if needed
-* Read name  `.env.local.secret.example` to `.env.local.secret` and provide the
+* Read name `.env.config.example` to `.env.config` and update PORT value if needed
+* Read name  `.env.secret.example` to `.env.secret` and provide the
 
   ```
   # Email server

@@ -26,6 +26,6 @@ dist-ssr
 
 
 mail-server/.env
-mail-server/.env.local.config
-mail-server/.env.local.secret
+mail-server/.env.config
+mail-server/.env.secret
 mail-server/coverage
