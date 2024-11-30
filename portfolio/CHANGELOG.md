@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.1
+* Update NGINX configuration for mail server.
+
 ## 2.0.0
 * Add new web portfolio app.
 
