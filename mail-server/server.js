@@ -7,11 +7,11 @@ const emailRateLimiter = require('./middleware/rateLimter/rateLimiter');
 const loadEnv = require('./utils/envHelper');
 const sendEmailRoutes = require('./routes/email.route');
 
-// Setting express server
-const app = express();
-
 // Load environment variables
 loadEnv();
+
+// Setting express server
+const app = express();
 
 app.use(express.json());
 app.set('trust proxy', 1);
