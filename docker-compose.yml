@@ -25,7 +25,8 @@ services:
     secrets:
       - mail_server_secret
     configs:
-      - mail_server_config
+      - source: mail_server_config
+        target: /run/config/mail_server_config
     networks:
       - portfolio-network
     deploy:
