@@ -2,9 +2,12 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
 
+console.log('Pre transport, EMAIL_HOST:', process.env.EMAIL_HOST);
+console.log('Pre transport, EMAIL_PORT:', process.env.EMAIL_PORT);
+
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
+  host: "mail-server",
+  port: 3000,
   service: process.env.SERVICE,
   secure: false,
   auth: {
@@ -13,8 +16,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log(process.env.EMAIL_HOST);
-console.log(process.env.EMAIL_PORT);
+console.log('Post transport, EMAIL_HOST:', process.env.EMAIL_HOST);
+console.log('Post transport, EMAIL_PORT:', process.env.EMAIL_PORT);
 
 // POST /send-email route
 router.post('/', (req, res) => {
