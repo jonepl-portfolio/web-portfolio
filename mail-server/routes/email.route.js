@@ -7,13 +7,14 @@ console.log('Pre transport, EMAIL_PORT:', process.env.EMAIL_PORT);
 
 const transporter = nodemailer.createTransport({
   host: "mail-server",
-  port: 3000,
-  service: process.env.SERVICE,
+  port: 587,
   secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  logger: true, // Enables logging
+  debug: true,  // Enables detailed debugging
 });
 
 console.log('Post transport, EMAIL_HOST:', process.env.EMAIL_HOST);
