@@ -22,6 +22,8 @@ services:
 
   mail-server:
     image: jonepl/mail-server:latest
+    expose:
+      - "587"
     secrets:
       - mail_server_secret
     configs:
