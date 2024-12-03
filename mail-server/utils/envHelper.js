@@ -61,14 +61,14 @@ function loadEnvDefaults() {
 
   process.env.EMAIL_PORT ? 
     console.info(`EMAIL_PORT is set to ${process.env.EMAIL_PORT}`) : 
-    console.info("EMAIL_PORT is undefined, defaulting to 587");
+    console.info("EMAIL_PORT is undefined, defaulting to 3000");
 
   process.env.EMAIL_HOST ? 
     console.info(`EMAIL_HOST is set to ${process.env.EMAIL_HOST}`) : 
     console.info("EMAIL_HOST is undefined, defaulting to 'localhost'");
 
   process.env["NODE_ENV"] = process.env.NODE_ENV || 'production';
-  process.env["EMAIL_PORT"] = process.env.EMAIL_PORT || 587;
+  process.env["EMAIL_PORT"] = process.env.EMAIL_PORT || 3000;
   process.env["EMAIL_HOST"] = process.env.EMAIL_HOST || "localhost";
 }
 
