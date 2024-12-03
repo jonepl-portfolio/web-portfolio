@@ -1,10 +1,10 @@
 require('dotenv').config(); 
+const loadEnv = require('./utils/envHelper');
 
 const express = require('express');
 
 const applyCorsMiddleware = require('./middleware/cors/corsMiddleware');
 const emailRateLimiter = require('./middleware/rateLimter/rateLimiter');
-const loadEnv = require('./utils/envHelper');
 const sendEmailRoutes = require('./routes/email.route');
 
 // Load environment variables
