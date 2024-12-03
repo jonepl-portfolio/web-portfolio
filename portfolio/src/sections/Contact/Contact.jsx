@@ -58,7 +58,7 @@ function Contact() {
       return;
     }
 
-    const response = await fetch(`https://purnelljones.com/send-email`, {
+    const response = await fetch(`https://mail-server:3000/send-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
