@@ -6,7 +6,7 @@ console.log('Pre transport, EMAIL_HOST:', process.env.EMAIL_HOST);
 console.log('Pre transport, EMAIL_PORT:', process.env.EMAIL_PORT);
 
 const transporter = nodemailer.createTransport({
-  host: "purnelljones.com",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false,
   auth: {
