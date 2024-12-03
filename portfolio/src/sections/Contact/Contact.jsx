@@ -58,7 +58,7 @@ function Contact() {
       return;
     }
 
-    const response = await fetch(`http://mail-server:3000/send-email`, {
+    const response = await fetch(`/send-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
