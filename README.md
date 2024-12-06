@@ -26,9 +26,20 @@ This web portfolio uses a NodeJS mail server which you must configured to send e
 
 * Rename `.env.config.example` to `.env.config` and update APP_PORT, SMTP_HOST values as needed
 
+```conf
+# Node applicaiton port
+APP_PORT=3000
+
+# Mail server host
+SMTP_HOST=smtp.mail.yahoo.com
+
+# Mail server port
+SMTP_PORT=587
+```
+
 * Rename `.env.secret.example` to `.env.secret` and update EMAIL, EMAIL_PASS, FORWARDING_EMAIL values as needed
 
-  ```  
+  ```  conf
   # Sender's email address
   EMAIL="example@yahoo.com"
 
@@ -55,4 +66,5 @@ NOTE: The above steps will simulate a remote server. An entrypoint.sh script wil
 
 ## Pre-Merge Checklist
 * Update [Portfolio VERSION](./portfolio/VERSION) or [Mail Server VERSION](./mail-server/VERSION)
+* Update [Portfolio package.json](./portfolio/package.json) or [Mail Server package.json](./mail-server/package.json)
 * Update [Porfolio CHANGELOG.md](./portfolio/CHANGELOG.md) or [Mail Server CHANGELOG.md](./mail-server/CHANGELOG.md)
