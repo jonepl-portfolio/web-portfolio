@@ -47,10 +47,10 @@ jobs:
         run: docker-compose -f docker-compose.yml config
 
       - name: Validate Mock Server Docker Compose file
-        run: docker-compose -f docker-compose.server.yml config
+        run: docker-compose -f local-server/docker-compose.server.yml config
 
       - name: Validate Mock Server Application Docker Compose file
-        run: docker-compose -f docker-compose.server.yml config
+        run: docker-compose -f local-server/docker-compose.server.yml config
 
   tests:
     name: Test Mail Server
