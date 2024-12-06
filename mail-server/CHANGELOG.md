@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.1.0
+* Rename secret and config variables. 
+
 # 1.0.3
 * Increase logging for config
 

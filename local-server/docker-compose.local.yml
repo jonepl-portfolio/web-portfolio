@@ -1,11 +1,24 @@
 version: '3.8'
 
 services:
+  api-gateway:
+    image: nginx:latest
+    container_name: api-gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - portfolio-network
+    depends_on:
+      - portfolio
+      - mail-server
+
   web-portfolio:
     container_name: web-portfolio
     image: web-portfolio:latest
-    ports:
-      - "80:80"
+    expose:
+      - "3000"
     depends_on:
       - mail-server
     networks:
@@ -24,10 +37,13 @@ services:
 
   mail-server:
     image: mail-server:latest
+    expose:
+      - "3000"
     secrets:
       - mail_server_secret
     configs:
-      - mail_server_config
+      - source: mail_server_config
+        target: /run/config/mail_server_config
     networks:
       - portfolio-network
     deploy:
