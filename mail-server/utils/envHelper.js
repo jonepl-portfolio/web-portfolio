@@ -1,23 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 
-const REQUIRED_SECRETS = ['SERVICE', 'EMAIL_USER', 'EMAIL_PASS', 'FORWARD_EMAIL_USER'];
 const SECRETS_PATH = '/run/secrets/mail_server_secret';
+const REQUIRED_SECRET_VALS = ['EMAIL', 'EMAIL_PASS', 'FORWARDING_EMAIL'];
 const CONFIG_PATH = '/run/config/mail_server_config';
+const REQUIRED_CONFIG_VALS = ['SMTP_HOST', 'SMTP_PORT'];
 
 // Load environment variables
 function loadEnv() {
   loadEnvFromFile(SECRETS_PATH);
   loadEnvFromFile(CONFIG_PATH);
+  validateRequiredEnvVariables();
   loadEnvDefaults();
-};
+}
 
 function loadEnvFromFile(filePath) {
-
-  if (process.env.NODE_ENV === 'development') {
-    return;
-  }
-
   try {
     const fullPath = path.resolve(filePath);
     if (fs.existsSync(fullPath)) {
@@ -36,14 +33,6 @@ function loadEnvFromFile(filePath) {
           }
         }
       });
-
-      // Check for missing required environment variables
-      const missingVars = REQUIRED_SECRETS.filter((varName) => !process.env[varName]);
-      if (missingVars.length > 0) {
-        console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
-        throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
-      }
-
     } else {
       console.warn(`File not found: ${filePath}`);
       throw new Error(`File not found: ${filePath}`);
@@ -54,22 +43,39 @@ function loadEnvFromFile(filePath) {
   }
 }
 
+function validateRequiredEnvVariables() {
+  let errors = [];
+
+  const missingSecrets = REQUIRED_SECRET_VALS.filter((varName) => !process.env[varName]);
+  const missingConfigs = REQUIRED_CONFIG_VALS.filter((varName) => !process.env[varName]);
+
+  if (missingSecrets.length > 0) {
+    errors.push(`Missing required secret environment variables: ${missingSecrets.join(', ')}`);
+  }
+
+  if (missingConfigs.length > 0) {
+    errors.push(`Missing required config environment variables: ${missingConfigs.join(', ')}`);
+  }
+
+  if (missingSecrets.length > 0 || missingConfigs.length > 0) {
+    if (errors.length > 0) {
+      console.error(errors.join('\n'));
+      throw new Error(errors.join('\n'));
+    }
+  } 
+}
+
 function loadEnvDefaults() {
   process.env.NODE_ENV ? 
     console.info(`NODE_ENV is set to ${process.env.NODE_ENV}`) : 
     console.info("NODE_ENV is undefined, defaulting to 'production'");
 
-  process.env.EMAIL_PORT ? 
-    console.info(`EMAIL_PORT is set to ${process.env.EMAIL_PORT}`) : 
+  process.env.APP_PORT ? 
+    console.info(`EMAIL_PORT is set to ${process.env.APP_PORT}`) : 
     console.info("EMAIL_PORT is undefined, defaulting to 3000");
 
-  process.env.EMAIL_HOST ? 
-    console.info(`EMAIL_HOST is set to ${process.env.EMAIL_HOST}`) : 
-    console.info("EMAIL_HOST is undefined, defaulting to 'localhost'");
-
   process.env["NODE_ENV"] = process.env.NODE_ENV || 'production';
-  process.env["EMAIL_PORT"] = process.env.EMAIL_PORT || 3000;
-  process.env["EMAIL_HOST"] = process.env.EMAIL_HOST || "localhost";
+  process.env["APP_PORT"] = process.env.APP_PORT || 3000;
 }
 
 module.exports = loadEnv;

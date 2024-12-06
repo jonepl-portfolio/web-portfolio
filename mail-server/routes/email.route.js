@@ -2,37 +2,28 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
 
-console.log('Pre transport, EMAIL_USER:', process.env.EMAIL_USER, "...");
-console.log('Pre transport, EMAIL_PASS:', process.env.EMAIL_PASS, "...");
-
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
   secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
+    user: process.env.EMAIL,
     pass: process.env.EMAIL_PASS,
   },
-  logger: true, // Enables logging
-  debug: true,  // Enables detailed debugging
 });
 
-console.log('Post transport, EMAIL_USER:', process.env.EMAIL_USER, "...");
-console.log('Post transport, EMAIL_PASS:', process.env.EMAIL_PASS, "...");
-
-// POST /send-email route
 router.post('/', (req, res) => {
   console.log("POST request received with body:", req.body);
   const { name, email, message } = req.body;
   const mailOptions = {
     from: email,
-    to: process.env.FORWARD_EMAIL_USER,
+    to: process.env.FORWARDING_EMAIL,
     subject: `Web Portfolio message from ${name}`,
     text: message + ". \n\nEmail: " + email,
   };
 
-  console.log(process.env.EMAIL_HOST);
-  console.log(process.env.EMAIL_PORT);
+  console.log("SMTP host", process.env.SMTP_HOST);
+  console.log("SMTP port", process.env.SMTP_PORT);
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {

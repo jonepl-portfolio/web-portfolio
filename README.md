@@ -9,12 +9,12 @@ This repository contains the Web Portfolio for the hosted applications. The Web 
 
 ## Design
 <p align="center">
- <img src="./docs/Web-Portfolio.jpg" style="display: block; margin: 0 auto">
+ <img src="./docs/Web-Portfolio-V2.jpg" style="display: block; margin: 0 auto">
 </p>
 
 <br/>
 
-This web portfolio runs an Nginx web server to host the static files within a docker container. The docker-compose file is meant to be used within a docker-swarm instance.
+This web portfolio application runs an Nginx web server to host the static files and a Nodejs to handle SMTP messages within a Docker Swarm service.
 
 ## Prerequisites
 * NodeJS
@@ -24,32 +24,32 @@ This web portfolio runs an Nginx web server to host the static files within a do
 
 This web portfolio uses a NodeJS mail server which you must configured to send emails. 
 
-* Read name `.env.config.example` to `.env.config` and update PORT value if needed
-* Read name  `.env.secret.example` to `.env.secret` and provide the
+* Rename `.env.config.example` to `.env.config` and update APP_PORT, SMTP_HOST values as needed
 
-  ```
-  # Email server
-  SERVICE="yahoo"
-  
+* Rename `.env.secret.example` to `.env.secret` and update EMAIL, EMAIL_PASS, FORWARDING_EMAIL values as needed
+
+  ```  
   # Sender's email address
-  EMAIL_USER="example@yahoo.com"
+  EMAIL="example@yahoo.com"
 
-  # Email Application Password
+  # Sender's Application Email Password
   EMAIL_PASS="mypassword"
 
   # Recipient's email address
-  FORWARD_EMAIL_USER="myemail@yahoo.com"
+  FORWARDING_EMAIL="myemail@yahoo.com"
   ```
 
 ### Running Dev Locally
 1. Open a terminal shell and run `make start-server-dev`
 2. Open a second terminal and run  `start-portfolio-dev`
 3. Access web portfolio via `http://localhost:4000`
+4. Stop locally started app by press Ctrl + C within both terminals
 
 ### Running Docker Swarm Locally
 1. Build the mock server with `make build-mock-server`
 2. Start mock server with `make start-mock-server`
 3. Access web portfolio via `http://localhost`
+4. Stop the mock server with `make stop-mock-server`
 
 NOTE: The above steps will simulate a remote server. An entrypoint.sh script will initialize Docker Swarm, create networks, secrets, configs, build images and start the web portfolio services. The application should be accessible via port 80.
 

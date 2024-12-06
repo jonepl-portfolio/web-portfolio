@@ -45,7 +45,7 @@ describe('Email Route', () => {
     expect(sendMailMock).toHaveBeenCalledWith(
       expect.objectContaining({
         from: 'john@example.com',
-        to: process.env.FORWARD_EMAIL_USER,
+        to: process.env.FORWARDING_EMAIL,
         subject: 'Web Portfolio message from John Doe',
         text: 'Hello!. \n\nEmail: john@example.com',
       }),

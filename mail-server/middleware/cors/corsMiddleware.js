@@ -1,6 +1,5 @@
 const cors = require('cors');
 
-// Apply CORS middleware
 function applyCorsMiddleware(app) {
   app.use(cors());
   app.use((req, res, next) => {
