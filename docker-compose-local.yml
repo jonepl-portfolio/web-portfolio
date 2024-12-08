@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  web-portfolio:
+    image: jonepl/web-portfolio:latest
+    expose:
+      - "80"
+    depends_on:
+      - mail-server
+    networks:
+      - portfolio-network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+  mail-server:
+    image: jonepl/mail-server:latest
+    expose:
+      - "3000"
+      - "587"
+    volumes:
+      - ./.env.config.example:/run/config/mail_server_config
+      - ./.env.secret.example:/run/secrets/mail_server_secret
+    networks:
+      - portfolio-network
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+secrets:
+  mail_server_secret:
+    external: true
+
+configs:
+  mail_server_config:
+    external: true
+
+networks:
+  portfolio-network:
+    external: true
