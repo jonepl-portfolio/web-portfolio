@@ -19,6 +19,7 @@ This web portfolio application runs an Nginx web server to host the static files
 ## Prerequisites
 * NodeJS
 * NGINX
+* Vite (React)
 
 ## Usage
 
