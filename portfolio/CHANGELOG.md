@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.1.0
+* Add Python Scaffolder Project.
+
 ## 2.0.2
 * Update fetch endpoint.
 

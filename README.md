@@ -53,7 +53,7 @@ SMTP_PORT=587
 
 ### Running Dev Locally
 1. Open a terminal shell and run `make start-server-dev`
-2. Open a second terminal and run  `start-portfolio-dev`
+2. Open a second terminal and run  `make start-portfolio-dev`
 3. Access web portfolio via `http://localhost:4000`
 4. Stop locally started app by press Ctrl + C within both terminals
 
