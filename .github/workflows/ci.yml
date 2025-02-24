@@ -20,17 +20,24 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
+      - name: Install semver
+        run: sudo npm install -g semver
+
       - name: Verify Portfolio Version
         run: |
           current_version=$(jq -r '.version' ./portfolio/package.json)
           previous_version=$(docker image ls --filter "reference=***/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
+          if semver -r "<=$previous_version" "$current_version"; then
+            echo 'Update semantic version in the package.json file'; exit 1;
+          fi
 
       - name: Verify Mail Server Version
         run: |
           current_version=$(jq -r '.version' ./mail-server/package.json)
           previous_version=$(docker image ls --filter "reference=***/mail-server" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
+          if semver -r "<=$previous_version" "$current_version"; then
+            echo 'Update semantic version in the package.json file'; exit 1;
+          fi
 
   validate-docker-compose:
     name: Validate Docker Compose Files
@@ -86,6 +93,9 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
+      - name: Install semver
+        run: sudo npm install -g semver
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -99,7 +109,9 @@ jobs:
         run: |
           portfolio_version=$(jq -r '.version' ./portfolio/package.json)
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $portfolio_version -eq $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
+          if semver -r "<=$previous_version" "$portfolio_version"; then
+            echo 'Update semantic version in the package.json file'; exit 1;
+          fi
           
           docker build -f ./portfolio/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest ./portfolio
           docker save --output portfolio-versioned.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
@@ -107,7 +119,9 @@ jobs:
 
           mail_server_version=$(jq -r '.version' ./mail-server/package.json)
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $mail_server_version -eq $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
+          if semver -r "<=$previous_version" "$mail_server_version"; then
+            echo 'Update semantic version in the package.json file'; exit 1;
+          fi
 
           docker build -f ./mail-server/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version -t ${{ secrets.DOCKER_USERNAME }}/mail-server:latest ./mail-server
           docker save --output mail-server-versioned.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version
