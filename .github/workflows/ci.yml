@@ -171,7 +171,7 @@ jobs:
           docker load --input ./mail-server-versioned.docker
           docker load --input ./mail-server-latest.docker
 
-          mail_server_version=$(jq -r '.version' ./portfolio/package.json)
+          portfolio_version=$(jq -r '.version' ./portfolio/package.json)
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
           
