@@ -18,6 +18,7 @@ function Projects() {
         />
         <ProjectCard
           src={investo}
+          link="https://github.com/jonepl/Investo-Manifesto"
           h3="Investo Manifesto"
           p="Finacial Investment Visualizer"
         />

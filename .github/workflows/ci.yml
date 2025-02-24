@@ -17,17 +17,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       - name: Verify Portfolio Version
         run: |
-          current_version=$(cat ./portfolio/VERSION | tr -d '\n\r')
+          current_version=$(jq -r '.version' ./portfolio/package.json)
           previous_version=$(docker image ls --filter "reference=***/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
 
       - name: Verify Mail Server Version
         run: |
-          current_version=$(cat ./mail-server/VERSION | tr -d '\n\r')
+          current_version=$(jq -r '.version' ./mail-server/package.json)
           previous_version=$(docker image ls --filter "reference=***/mail-server" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+          if [[ $current_version = $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
 
   validate-docker-compose:
     name: Validate Docker Compose Files
@@ -80,6 +83,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -91,17 +97,17 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          portfolio_version=$(cat ./portfolio/VERSION | tr -d '\n\r')
+          portfolio_version=$(jq -r '.version' ./portfolio/package.json)
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $portfolio_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+          if [[ $portfolio_version -eq $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
           
           docker build -f ./portfolio/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version -t ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest ./portfolio
           docker save --output portfolio-versioned.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
           docker save --output portfolio-latest.docker ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
 
-          mail_server_version=$(cat ./mail-server/VERSION)
+          mail_server_version=$(jq -r '.version' ./mail-server/package.json)
           previous_version=$(docker image ls --filter "reference=${{ secrets.DOCKER_USERNAME }}/web-portfolio" --format "{{.Repository}}:{{.Tag}}" | awk -F ':' '{print $2}')
-          if [[ $mail_server_version -eq $previous_version ]]; then echo 'Update semantic version in VERSION file'; exit 1; fi
+          if [[ $mail_server_version -eq $previous_version ]]; then echo 'Update semantic version in the package.json file'; exit 1; fi
 
           docker build -f ./mail-server/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version -t ${{ secrets.DOCKER_USERNAME }}/mail-server:latest ./mail-server
           docker save --output mail-server-versioned.docker ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version
@@ -151,11 +157,11 @@ jobs:
           docker load --input ./mail-server-versioned.docker
           docker load --input ./mail-server-latest.docker
 
-          portfolio_version=$(cat ./portfolio/VERSION | tr -d '\n\r')
+          mail_server_version=$(jq -r '.version' ./portfolio/package.json)
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:$portfolio_version
           docker push ${{ secrets.DOCKER_USERNAME }}/web-portfolio:latest
           
-          mail_server_version=$(cat ./mail-server/VERSION | tr -d '\n\r')
+          mail_server_version=$(jq -r '.version' ./mail-server/package.json)
           docker push ${{ secrets.DOCKER_USERNAME }}/mail-server:$mail_server_version
           docker push ${{ secrets.DOCKER_USERNAME }}/mail-server:latest
 
