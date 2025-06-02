@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.1.2
+* Update Profile Photo.
+
 ## 2.1.1
 * Add Investo Manifesto Project.
 
