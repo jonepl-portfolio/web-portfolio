@@ -66,6 +66,6 @@ SMTP_PORT=587
 NOTE: The above steps will simulate a remote server. An entrypoint.sh script will initialize Docker Swarm, create networks, secrets, configs, build images and start the web portfolio services. The application should be accessible via port 80.
 
 ## Pre-Merge Checklist
-* Update [Portfolio VERSION](./portfolio/VERSION) or [Mail Server VERSION](./mail-server/VERSION)
+* Update [Portfolio VERSION](./portfolio/package.json) or [Mail Server VERSION](./mail-server/package.json)
 * Update [Portfolio package.json](./portfolio/package.json) or [Mail Server package.json](./mail-server/package.json)
 * Update [Porfolio CHANGELOG.md](./portfolio/CHANGELOG.md) or [Mail Server CHANGELOG.md](./mail-server/CHANGELOG.md)
