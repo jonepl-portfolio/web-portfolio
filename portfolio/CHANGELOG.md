@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.1.3
+* Update Profile Photo V2.
+
 ## 2.1.2
 * Update Profile Photo.
 
