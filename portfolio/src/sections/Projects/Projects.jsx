@@ -1,7 +1,7 @@
 import styles from './ProjectsStyles.module.css';
 import portfolio from '../../assets/web-portfolio-v2.png';
 import csvMerger from '../../assets/csv-merger-api.png'
-import flaskScaffolder from '../../assets/flask-api-scaffolder.png';
+import rentalBuddy from '../../assets/Rental-Buddy.png';
 import investo from '../../assets/Investo-Manifesto-v2.png';
 import ProjectCard from '../../common/ProjectCard';
 
@@ -29,10 +29,10 @@ function Projects() {
           p="Merge CSV files"
         />
         <ProjectCard
-          src={flaskScaffolder}
-          link="https://github.com/jonepl/api-scaffolder"
-          h3="API Scaffolder"
-          p="Generate APIs using Flask"
+          src={rentalBuddy}
+          link="https://github.com/jonepl/rental-buddy"
+          h3="Rental Buddy"
+          p="Query Rental Property Comparables"
         />
       </div>
     </section>
