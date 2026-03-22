@@ -3,6 +3,7 @@ import portfolio from '../../assets/web-portfolio-v2.png';
 import csvMerger from '../../assets/csv-merger-api.png'
 import rentalBuddy from '../../assets/Rental-Buddy.png';
 import investo from '../../assets/Investo-Manifesto-v2.png';
+import jobHunter from '../../assets/Job-Hunter-AI.png';
 import ProjectCard from '../../common/ProjectCard';
 
 function Projects() {
@@ -17,6 +18,18 @@ function Projects() {
           p="Web Portfolio"
         />
         <ProjectCard
+          src={rentalBuddy}
+          link="https://github.com/jonepl/rental-buddy"
+          h3="Rental Buddy"
+          p="Query Rental Property Comparables"
+        />
+        <ProjectCard
+          src={jobHunter}
+          link="https://github.com/jonepl/Job-Hunter-AI"
+          h3="Job Hunter AI"
+          p="AI Powered Job Listing Finder"
+        />
+        <ProjectCard
           src={investo}
           link="https://github.com/jonepl/Investo-Manifesto"
           h3="Investo Manifesto"
@@ -27,12 +40,6 @@ function Projects() {
           link="https://github.com/jonepl-portfolio/csv-merger-api"
           h3="CSV Merger API"
           p="Merge CSV files"
-        />
-        <ProjectCard
-          src={rentalBuddy}
-          link="https://github.com/jonepl/rental-buddy"
-          h3="Rental Buddy"
-          p="Query Rental Property Comparables"
         />
       </div>
     </section>
