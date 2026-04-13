@@ -35,12 +35,6 @@ function Projects() {
           h3="Investo Manifesto"
           p="Finacial Investment Visualizer"
         />
-        <ProjectCard
-          src={csvMerger}
-          link="https://github.com/jonepl-portfolio/csv-merger-api"
-          h3="CSV Merger API"
-          p="Merge CSV files"
-        />
       </div>
     </section>
   );
